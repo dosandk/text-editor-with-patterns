@@ -1,0 +1,40 @@
+.content {
+  display: flex;
+  gap: 10px;
+}
+
+.editor-wrapper {
+  min-height: 50vh;
+  outline: 1px solid black;
+  flex: 1;
+  padding: 10px;
+}
+
+.history-wrapper {
+  min-height: 50vh;
+  outline: 1px solid black;
+  flex: 1;
+  padding: 10px;
+}
+
+.preview-wrapper {
+  min-height: 50vh;
+  outline: 1px solid black;
+  flex: 1;
+  padding: 10px;
+}
+
+/* Editor component styles */
+.textarea {
+  height: 100px;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* History component styles */
+.history li {
+  margin: 0 0 10px 0;
+}
+.history li:first-child {
+  outline: 1px solid red;
+}
+/* Preview component styles */
