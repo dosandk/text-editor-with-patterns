@@ -1,5 +1,6 @@
 import Editor from "./editor/index.js";
 import History from "./history/index.js";
+import HotKeys from "./hotkeys/index.js";
 import Preview from "./preview/index.js";
 
 class Page {
@@ -10,6 +11,7 @@ class Page {
     this.components.editor = new Editor();
     this.components.history = new History();
     this.components.preview = new Preview();
+    this.components.hotkeys = new HotKeys();
 
     this.render();
     this.getSubElements();
@@ -35,6 +37,10 @@ class Page {
           <div class="preview-wrapper" data-element="preview">
             <h2>Preview</h2>
           </div>
+        </div>
+
+        <div class="hotkeys-wrapper" data-element="hotkeys">
+          <h2>Hot keys</h2>
         </div>
       </div>
     `;

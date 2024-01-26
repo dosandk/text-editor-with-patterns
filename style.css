@@ -38,3 +38,12 @@
   outline: 1px solid red;
 }
 /* Preview component styles */
+
+/* HotKeys component styles */
+.hotkeys input {
+  width: 30px;
+  text-align: center;
+}
+.hotkeys select {
+  width: 80px;
+}

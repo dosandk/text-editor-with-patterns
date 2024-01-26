@@ -1,7 +1,13 @@
+import { SaveCommand, PreviewCommand } from "../commands/index.js";
+
 export default class Editor {
   subElements = {};
+  commands = {};
 
   constructor() {
+    this.commands.save = new SaveCommand();
+    this.commands.preview = new PreviewCommand();
+
     this.render();
     this.getSubElements();
     this.initListeners();
@@ -50,20 +56,10 @@ export default class Editor {
     const { saveBtn, previewBtn, textareaEl } = this.subElements;
 
     saveBtn.addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("save-doc", {
-          detail: textareaEl.value,
-          bubbles: true,
-        }),
-      );
+      this.commands.save.execute(textareaEl.value);
     });
     previewBtn.addEventListener("click", () => {
-      document.dispatchEvent(
-        new CustomEvent("preview-doc", {
-          detail: textareaEl.value,
-          bubbles: true,
-        }),
-      );
+      this.commands.preview.execute(textareaEl.value);
     });
   }
 }

@@ -1,4 +1,9 @@
 import { HistoryService } from "./history.service.js";
+import {
+  PreviewCommand,
+  RestoreCommand,
+  PrintCommand,
+} from "../commands/index.js";
 
 class HistoryItem {
   subElements = {};
@@ -69,32 +74,29 @@ class HistoryItem {
 
 export default class History {
   subElements = {};
+  commands = {};
 
   restore = (item) => {
+    const { text } = item.snapshot.state;
     this.element.prepend(item.element);
-
-    document.dispatchEvent(
-      new CustomEvent("restore-doc", {
-        detail: item.snapshot.state.text,
-        bubbles: true,
-      }),
-    );
+    this.commands.restore.execute(text);
   };
 
   preview = (item) => {
-    document.dispatchEvent(
-      new CustomEvent("preview-doc", {
-        detail: item.snapshot.state.text,
-        bubbles: true,
-      }),
-    );
+    const { text } = item.snapshot.state;
+
+    this.commands.preview.execute(text);
   };
 
   print = (item) => {
-    console.table(item.snapshot.state);
+    this.commands.print.execute(item.snapshot.state);
   };
 
   constructor() {
+    this.commands.preview = new PreviewCommand();
+    this.commands.restore = new RestoreCommand();
+    this.commands.print = new PrintCommand();
+
     this.service = new HistoryService();
     this.render();
     this.getSubElements();
