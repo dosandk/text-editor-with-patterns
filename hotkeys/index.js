@@ -28,7 +28,7 @@ export default class HotKeys {
         </li>
         <li>
           <span>Ctrl + Shift +
-          <input type="text" value="P" maxlength="1" readonly disabled>></input>
+          <input type="text" value="P" maxlength="1" readonly disabled></input>
           <select>
             <option value="previw">Preview</option>
             <!--<option value="save">Save</option>-->
