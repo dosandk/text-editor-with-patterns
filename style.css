@@ -47,3 +47,22 @@
 .hotkeys select {
   width: 80px;
 }
+
+/* Controls panel */
+.control-btns {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.control-btns-item {
+  display: inline-block;
+}
+
+.control-btns-item button {
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}

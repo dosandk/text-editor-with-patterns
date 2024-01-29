@@ -1,24 +1,37 @@
 import Editor from "./editor/index.js";
-import History from "./history/index.js";
-import HotKeys from "./hotkeys/index.js";
-import Preview from "./preview/index.js";
+import ControlsPanel from "./editor/controls-panel.js";
+import HotKeysService from "./editor/hot-keys.service.js";
+import {
+  BoldCommand,
+  ItalicCommand,
+  StrikeCommand,
+} from "./editor/commands.js";
 
 class Page {
   components = {};
   subElements = {};
 
   constructor() {
-    this.components.editor = new Editor();
-    this.components.history = new History();
-    this.components.preview = new Preview();
-    this.components.hotkeys = new HotKeys();
+    const hotKeysService = new HotKeysService();
+    const controlsPanel = new ControlsPanel();
+
+    this.components.editor = new Editor(controlsPanel);
+
+    const boldCommand = new BoldCommand(this.components.editor);
+    const italicCommand = new ItalicCommand(this.components.editor);
+    const strikeCommand = new StrikeCommand(this.components.editor);
+
+    controlsPanel.addCommand(boldCommand);
+    controlsPanel.addCommand(italicCommand);
+    controlsPanel.addCommand(strikeCommand);
+
+    hotKeysService.addCommand("B", boldCommand);
+    hotKeysService.addCommand("I", italicCommand);
+    hotKeysService.addCommand("S", strikeCommand);
 
     this.render();
     this.getSubElements();
     this.renderComponents();
-
-    // TODO: create message service
-    this.initListeners();
   }
 
   render() {
@@ -31,16 +44,6 @@ class Page {
           <div class="editor-wrapper" data-element="editor">
             <h2>Editor</h2>
           </div>
-          <div class="history-wrapper" data-element="history">
-            <h2>History</h2>
-          </div>
-          <div class="preview-wrapper" data-element="preview">
-            <h2>Preview</h2>
-          </div>
-        </div>
-
-        <div class="hotkeys-wrapper" data-element="hotkeys">
-          <h2>Hot keys</h2>
         </div>
       </div>
     `;
@@ -67,24 +70,6 @@ class Page {
       const { element } = this.components[component];
 
       root.append(element);
-    });
-  }
-
-  initListeners() {
-    document.addEventListener("save-doc", (event) => {
-      const text = event.detail;
-
-      this.components.history.add(text);
-    });
-    document.addEventListener("restore-doc", (event) => {
-      const text = event.detail;
-
-      this.components.editor.restore(text);
-    });
-    document.addEventListener("preview-doc", (event) => {
-      const text = event.detail;
-
-      this.components.preview.update(text);
     });
   }
 }

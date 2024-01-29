@@ -1,24 +1,54 @@
-import { SaveCommand, PreviewCommand } from "../commands/index.js";
-
 export default class Editor {
   subElements = {};
   commands = {};
+  components = {};
 
-  constructor() {
-    this.commands.save = new SaveCommand();
-    this.commands.preview = new PreviewCommand();
-
+  constructor(controlsPanel) {
+    this.components.controlsPanel = controlsPanel;
     this.render();
     this.getSubElements();
-    this.initListeners();
+    this.renderComponents();
+  }
+
+  getSelectedTxt() {
+    const { textareaEl } = this.subElements;
+
+    if (textareaEl) {
+      const start = textareaEl.selectionStart;
+      const end = textareaEl.selectionEnd;
+
+      const selection = textareaEl.value.substring(start, end);
+
+      return selection;
+    }
+  }
+
+  replaceSelectedTxt(txt = "") {
+    const { textareaEl } = this.subElements;
+
+    if (textareaEl) {
+      const start = textareaEl.selectionStart;
+      const end = textareaEl.selectionEnd;
+
+      textareaEl.value =
+        textareaEl.value.substring(0, start) +
+        txt +
+        textareaEl.value.substring(end);
+    }
+  }
+
+  renderComponents() {
+    Object.keys(this.components).forEach((component) => {
+      const root = this.subElements[component];
+      const { element } = this.components[component];
+
+      root.append(element);
+    });
   }
 
   get template() {
     return `<div class="editor">
-      <div class="controsl-panel">
-        <button data-element="previewBtn">preview</button>
-        <button data-element="saveBtn">save</button>
-      </div>
+      <div data-element="controlsPanel"></div>
       <div class="text-field">
         <textarea class="textarea" data-element="textareaEl"></textarea>
       </div>
@@ -50,16 +80,5 @@ export default class Editor {
     }
 
     this.subElements = result;
-  }
-
-  initListeners() {
-    const { saveBtn, previewBtn, textareaEl } = this.subElements;
-
-    saveBtn.addEventListener("click", () => {
-      this.commands.save.execute(textareaEl.value);
-    });
-    previewBtn.addEventListener("click", () => {
-      this.commands.preview.execute(textareaEl.value);
-    });
   }
 }
