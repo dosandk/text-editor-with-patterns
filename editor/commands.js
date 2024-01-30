@@ -7,17 +7,20 @@ export class BoldCommand {
   }
 
   execute() {
+    this.editor.lastCommand = this;
+
     const selectedTxt = this.editor.getSelectedTxt();
-
-    this.prevState = selectedTxt;
-
     const wrappedTxt = `**${selectedTxt}**`;
+
+    this.prevState = this.editor.subElements.textareaEl.value;
+    // this.prevState = selectedTxt;
 
     this.editor.replaceSelectedTxt(wrappedTxt);
   }
 
   undo() {
-    this.editor.replaceSelectedTxt(this.prevState);
+    // this.editor.lastCommand = this;
+    this.editor.restoreTxt(this.prevState);
   }
 }
 
@@ -29,9 +32,12 @@ export class ItalicCommand {
   }
 
   execute() {
+    this.editor.lastCommand = this;
+
     const selectedTxt = this.editor.getSelectedTxt();
 
-    this.prevState = selectedTxt;
+    this.prevState = this.editor.subElements.textareaEl.value;
+    // this.prevState = selectedTxt;
 
     const wrappedTxt = `*${selectedTxt}*`;
 
@@ -39,7 +45,7 @@ export class ItalicCommand {
   }
 
   undo() {
-    this.editor.replaceSelectedTxt(this.prevState);
+    this.editor.restoreTxt(this.prevState);
   }
 }
 
@@ -51,9 +57,12 @@ export class StrikeCommand {
   }
 
   execute() {
+    this.editor.lastCommand = this;
+
     const selectedTxt = this.editor.getSelectedTxt();
 
-    this.prevState = selectedTxt;
+    this.prevState = this.editor.subElements.textareaEl.value;
+    // this.prevState = selectedTxt;
 
     const wrappedTxt = `~~${selectedTxt}~~`;
 
@@ -61,6 +70,20 @@ export class StrikeCommand {
   }
 
   undo() {
-    this.editor.replaceSelectedTxt(this.prevState);
+    this.editor.restoreTxt(this.prevState);
+  }
+}
+
+export class UndoCommand {
+  name = "undo";
+
+  constructor(editor = {}) {
+    this.editor = editor;
+  }
+
+  execute() {
+    if (this.editor.lastCommand) {
+      this.editor.lastCommand.undo();
+    }
   }
 }

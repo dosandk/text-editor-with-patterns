@@ -13,7 +13,11 @@ export default class HotKeysService {
     document.addEventListener("keydown", (event) => {
       const { shiftKey, ctrlKey, key } = event;
 
-      if (shiftKey && ctrlKey && Object.keys(this.commands).includes(key)) {
+      if (shiftKey === false || ctrlKey === false) {
+        return;
+      }
+
+      if (Object.keys(this.commands).includes(key)) {
         this.commands[key].execute();
       }
     });

@@ -21,6 +21,9 @@ export default class ControlsPanel {
       <li class="control-btns-item">
         <button data-element="strike" title="strikethrough"><s>S</s></button>
       </li>
+      <li class="control-btns-item">
+        <button data-element="undo" title="undo">Undo</button>
+      </li>
     </ul>`;
   }
 
@@ -36,12 +39,16 @@ export default class ControlsPanel {
     this.element.addEventListener("click", (event) => {
       const { target } = event;
 
-      const btnElement = target.closest("[data-element]");
+      const btnElement = target.closest("button[data-element]");
 
       if (btnElement) {
         const name = btnElement.dataset.element;
 
-        this.commands[name].execute();
+        if (this.commands[name]) {
+          this.commands[name].execute();
+        } else {
+          console.error(`There is no command with name: "${name}"`);
+        }
       }
     });
   }

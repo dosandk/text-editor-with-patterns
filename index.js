@@ -5,6 +5,7 @@ import {
   BoldCommand,
   ItalicCommand,
   StrikeCommand,
+  UndoCommand,
 } from "./editor/commands.js";
 
 class Page {
@@ -20,10 +21,12 @@ class Page {
     const boldCommand = new BoldCommand(this.components.editor);
     const italicCommand = new ItalicCommand(this.components.editor);
     const strikeCommand = new StrikeCommand(this.components.editor);
+    const undoCommand = new UndoCommand(this.components.editor);
 
     controlsPanel.addCommand(boldCommand);
     controlsPanel.addCommand(italicCommand);
     controlsPanel.addCommand(strikeCommand);
+    controlsPanel.addCommand(undoCommand);
 
     hotKeysService.addCommand("B", boldCommand);
     hotKeysService.addCommand("I", italicCommand);

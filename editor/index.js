@@ -1,4 +1,8 @@
 export default class Editor {
+  lastCommand = {
+    execute: () => { },
+    undo: () => { },
+  };
   subElements = {};
   commands = {};
   components = {};
@@ -8,33 +12,41 @@ export default class Editor {
     this.render();
     this.getSubElements();
     this.renderComponents();
+    this.initListeners();
   }
 
-  getSelectedTxt() {
+  getSelection() {
     const { textareaEl } = this.subElements;
 
     if (textareaEl) {
       const start = textareaEl.selectionStart;
       const end = textareaEl.selectionEnd;
 
-      const selection = textareaEl.value.substring(start, end);
-
-      return selection;
+      return [start, end];
     }
+  }
+  getSelectedTxt() {
+    const { textareaEl } = this.subElements;
+    const [start, end] = this.getSelection();
+    const selection = textareaEl.value.substring(start, end);
+
+    return selection;
   }
 
   replaceSelectedTxt(txt = "") {
     const { textareaEl } = this.subElements;
+    const [start, end] = this.getSelection();
 
-    if (textareaEl) {
-      const start = textareaEl.selectionStart;
-      const end = textareaEl.selectionEnd;
+    textareaEl.value =
+      textareaEl.value.substring(0, start) +
+      txt +
+      textareaEl.value.substring(end);
+  }
 
-      textareaEl.value =
-        textareaEl.value.substring(0, start) +
-        txt +
-        textareaEl.value.substring(end);
-    }
+  restoreTxt(prevState = "") {
+    const { textareaEl } = this.subElements;
+
+    textareaEl.value = prevState;
   }
 
   renderComponents() {
@@ -80,5 +92,17 @@ export default class Editor {
     }
 
     this.subElements = result;
+  }
+
+  initListeners() {
+    const { textareaEl } = this.subElements;
+
+    textareaEl.addEventListener("input", () => {
+      // NOTE: just clear last command after some input
+      this.lastCommand = {
+        execute: () => { },
+        undo: () => { },
+      };
+    });
   }
 }
