@@ -8,6 +8,48 @@ import {
   UndoCommand,
 } from "./editor/commands.js";
 
+class HotkeysPreview {
+  constructor(commandsList = []) {
+    this.commandsList = commandsList;
+
+    this.render();
+  }
+
+  get template() {
+    return `<div>
+      <h3>Hotkeys list</h3>
+      <ul>
+        ${this.getCommandsList()}
+      </ul>
+    </div>`;
+  }
+
+  render() {
+    const wrapper = document.createElement("div");
+
+    wrapper.innerHTML = this.template;
+
+    this.element = wrapper.firstElementChild;
+  }
+
+  getCommandsList() {
+    return Object.keys(this.commandsList)
+      .map((commandKey) => {
+        return `
+          <li>
+            <span>Ctrl + Shift +
+            <input type="text" value="${commandKey}" maxlength="1" readonly disabled></input>
+            <select>
+              <option value="save">${this.commandsList[commandKey].name}</option>
+            </select>
+            <button disabled>apply</button>
+          </li>
+        `;
+      })
+      .join("");
+  }
+}
+
 class Page {
   components = {};
   subElements = {};
@@ -31,6 +73,11 @@ class Page {
     hotKeysService.addCommand("B", boldCommand);
     hotKeysService.addCommand("I", italicCommand);
     hotKeysService.addCommand("S", strikeCommand);
+    hotKeysService.addCommand("U", undoCommand);
+
+    this.components.hotkeysPreview = new HotkeysPreview(
+      hotKeysService.commands,
+    );
 
     this.render();
     this.getSubElements();
@@ -47,6 +94,7 @@ class Page {
           <div class="editor-wrapper" data-element="editor">
             <h2>Editor</h2>
           </div>
+          <div data-element="hotkeysPreview"></div>
         </div>
       </div>
     `;

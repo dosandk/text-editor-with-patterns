@@ -41,6 +41,8 @@ export default class Editor {
       textareaEl.value.substring(0, start) +
       txt +
       textareaEl.value.substring(end);
+
+    // TODO: make snapshot
   }
 
   restoreTxt(prevState = "") {
@@ -94,11 +96,21 @@ export default class Editor {
     this.subElements = result;
   }
 
+  makeSnapshot() {
+    console.log("snapshot");
+  }
+
   initListeners() {
     const { textareaEl } = this.subElements;
 
-    textareaEl.addEventListener("input", () => {
+    textareaEl.addEventListener("keyup", (event) => {
       // NOTE: just clear last command after some input
+      // console.log("input", event.keyCode);
+
+      if (event.keyCode === 32) {
+        this.makeSnapshot();
+      }
+
       this.lastCommand = {
         execute: () => { },
         undo: () => { },
